@@ -1,5 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import * as bootstrap from 'bootstrap';
 import React, {useEffect} from "react";
 import Grille from "./components/Grille.jsx";
 
