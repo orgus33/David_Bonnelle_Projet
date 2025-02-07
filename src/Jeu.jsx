@@ -66,7 +66,7 @@ const Jeu = () => {
                     )}
                 </div>
             </div>
-            <Grille mode={difficulte} data={dataJeu} dataUpdate={updateDataJeu}/>
+            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={updateDataJeu}/>
         </div>
     );
 };
