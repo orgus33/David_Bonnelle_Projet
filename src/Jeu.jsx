@@ -1,10 +1,17 @@
-import  { useState } from "react";
+import {useEffect, useState} from "react";
 import Grille from "./components/Grille.jsx";
 
 const Jeu = () => {
     const [difficulte, setDifficulte] = useState(1);
-    const [dataJeu, updateDataJeu] = useState([1, 100]);
+    const [dataJeu, setDataJeu] = useState([1, 0]);
     const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setDataJeu(([drapeaux, temps]) => [drapeaux, ++temps]);
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     const togglePopover = () => {
         setIsOpen(!isOpen);
@@ -58,15 +65,15 @@ const Jeu = () => {
 
                     </button>
                     {isOpen && (
-                        <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
                             <div className="p-4 text-sm text-gray-700">
-                                <p><strong>Click gauche:</strong> dévoiler la case <br></br><strong>Click droit :</strong> Mettre un drapeau</p>
+                                <p><strong>Click gauche:</strong> Dévoiler la case <br></br><strong>Click droit :</strong> Mettre un drapeau</p>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
-            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={updateDataJeu}/>
+            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={setDataJeu}/>
         </div>
     );
 };
