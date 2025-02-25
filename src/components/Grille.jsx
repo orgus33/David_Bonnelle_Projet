@@ -1,53 +1,89 @@
 import {useEffect, useState} from "react";
 import Case from "./Case.jsx";
 
-function Grille({mode, data, dataUpdate}) {
-    let [hauteur, setHauteur] = useState(1);
-    let [largeur, setLargeur] = useState(1);
+function Grille({difficulte, data, dataUpdate}) {
+    const [hauteur, setHauteur] = useState(1);
+    const [largeur, setLargeur] = useState(1);
+    const [nbBombes, setNbBombes] = useState(10);
+    const [estPremierClick, setEstPremierClick] = useState(true);
+    const [grilleEtat, setGrilleEtat] = useState([]);
+    const [grilleEstDecouvert, setGrilleEstDecouvert] = useState([]);
+
     useEffect(() => {
-        switch (mode) {
+        let newHauteur, newLargeur, newNbBombes;
+
+        switch (difficulte) {
             case 1:
-                setHauteur(10);
-                setLargeur(10);
+                newHauteur = 10;
+                newLargeur = 10;
+                newNbBombes = 20;
                 break;
             case 2:
-                setHauteur(15);
-                setLargeur(15);
-                break;
-            case 3:
-                setHauteur(20);
-                setLargeur(20);
+                newHauteur = 15;
+                newLargeur = 15;
+                newNbBombes = 50;
                 break;
             default:
-                setHauteur(10);
-                setLargeur(10);
+                newHauteur = 20;
+                newLargeur = 20;
+                newNbBombes = 100;
+                break;
         }
-    }, [mode]);
+
+        setHauteur(newHauteur);
+        setLargeur(newLargeur);
+        setNbBombes(newNbBombes);
+
+        setGrilleEtat(Array.from({ length: newHauteur }, () => Array(newLargeur).fill(0)));
+        setGrilleEstDecouvert(Array.from({ length: newHauteur }, () => Array(newLargeur).fill(0)));
+    }, [difficulte]);
+
+    const creerGrille = () => {
+        let bombesPlacees = 0;
+        while (bombesPlacees < nbBombes) {
+            const x = Math.floor(Math.random() * hauteur);
+            const y = Math.floor(Math.random() * largeur);
+
+            if (grilleEtat[x][y] === -1) continue;
+
+            setGrilleEtat((prevGrilleEtat) => {
+                const newGrilleEtat = [...prevGrilleEtat];
+                newGrilleEtat[x][y] = -1;
+                return newGrilleEtat;
+            });
+            bombesPlacees++;
+        }
+        setEstPremierClick(false);
+    };
 
     return (
-        <div>
-            <div className="grid gap-0" style={{ gridTemplateColumns: `repeat(${largeur}, 0fr)` }}>
-                {Array.from({ length: hauteur * largeur }).map((_, index) => (
-                    <Case key={index} state={0}/>
-                ))}
+        <div className="flex w-full justify-center items-center my-4">
+            <div className="grid aspect-square w-full max-w-[85vh] gap-0" style={{
+                gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
+                gridTemplateRows: `repeat(${hauteur}, minmax(0, 1fr))`,
+                gap: 0
+            }}>
+                {grilleEtat.map((ligne, indice1) =>
+                    ligne.map((_, indice2) => {
+                        if (indice1 >= hauteur || indice2 >= largeur) return null;
+                        const estDecouvert = grilleEstDecouvert[indice1]?.[indice2];
+                        const etatCase = grilleEtat[indice1]?.[indice2];
+                        return (
+                            <Case
+                                key={`${indice1}-${indice2}`}
+                                position={[indice1, indice2]}
+                                setGrilleEstDecouvert={setGrilleEstDecouvert}
+                                creerGrille={creerGrille}
+                                estDecouvert={estDecouvert}
+                                etatCase={etatCase}
+                                estPremierClick={estPremierClick}
+                            />
+                        );
+                    })
+                )}
             </div>
-
-            <p>Grille de difficulté {mode}</p>
-            <input type="range" className="form-range" id="customRange1" value={data[0]}
-                   min="0" max="200"
-                   onChange={event => {
-                       const newData = [...data];
-                       newData[0] = Number(event.target.value);
-                       dataUpdate(newData);
-                   }}/>
-            <input type="range" className="form-range" id="customRange1" value={data[1]}
-                   min="0" max="200"
-                   onChange={event => {
-                       const newData = [...data];
-                       newData[1] = Number(event.target.value);
-                       dataUpdate(newData);
-                   }}/>
         </div>
     );
 }
-export default  Grille;
+
+export default Grille;
