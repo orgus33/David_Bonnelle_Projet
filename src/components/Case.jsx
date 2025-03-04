@@ -2,12 +2,21 @@ import PropTypes from 'prop-types';
 
 const Case = ({estDecouvert, setGrilleEstDecouvert, creerGrille, estPremierClick, etatCase, position, activerDefaite}) => {
     const handleLeftClick = () => {
+
         if (estPremierClick) {
             creerGrille();
         }
+
         setGrilleEstDecouvert(prev => {
             const newGrille = prev.map(row => [...row]);
-            newGrille[position[0]][position[1]] = 1;
+
+            if (estDecouvert === 0) {
+                newGrille[position[0]][position[1]] = 1;
+            } else if (estDecouvert === 2) {
+                newGrille[position[0]][position[1]] = 0;
+            }
+
+
             return newGrille;
         });
         if(etatCase === -1){
@@ -20,7 +29,12 @@ const Case = ({estDecouvert, setGrilleEstDecouvert, creerGrille, estPremierClick
         event.preventDefault();
         setGrilleEstDecouvert(prev => {
             const newGrille = prev.map(row => [...row]);
-            newGrille[position[0]][position[1]] = 2;
+
+            if (estDecouvert === 0) {
+                newGrille[position[0]][position[1]] = 2;
+            } else if (estDecouvert === 2) {
+                newGrille[position[0]][position[1]] = 0;
+            }
             return newGrille;
         });
     };
