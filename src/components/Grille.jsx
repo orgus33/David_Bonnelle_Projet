@@ -79,7 +79,7 @@ function Grille({difficulte, data, dataUpdate, activerDefaite}) {
             <div className="grid aspect-square w-full max-w-[85vh] gap-0" style={{
                 gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
                 gridTemplateRows: `repeat(${hauteur}, minmax(0, 1fr))`,
-                gap: 0
+                gap: 0,
             }}>
                 {grilleEtat.map((ligne, indice1) =>
                     ligne.map((_, indice2) => {

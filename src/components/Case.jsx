@@ -16,9 +16,9 @@ const Case = ({estDecouvert, setGrilleEstDecouvert, creerGrille, estPremierClick
                 newGrille[position[0]][position[1]] = 0;
             }
 
-
             return newGrille;
         });
+
         if(etatCase === -1){
             activerDefaite();
         }
@@ -41,8 +41,10 @@ const Case = ({estDecouvert, setGrilleEstDecouvert, creerGrille, estPremierClick
 
     return (
         <div
-            className={`border-2 border-black flex items-center justify-center
-                        ${estDecouvert === 0 ? "bg-gray-400" : (estDecouvert === 1 ? "bg-white" : estDecouvert === 2 ? "bg-gray-700" : "bg-white")}`}
+            className={`border border-black flex items-center justify-center
+                ${estDecouvert === 0 ? ((position[0] + position[1]) % 2 === 0 ? "bg-gray-500" : "bg-gray-400") :
+                (estDecouvert === 1 ? "bg-white" :
+                    estDecouvert === 2 ? "bg-gray-700" : "bg-white")}`}
             onClick={handleLeftClick}
             onContextMenu={handleRightClick}
         >
