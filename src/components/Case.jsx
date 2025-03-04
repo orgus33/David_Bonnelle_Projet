@@ -41,8 +41,8 @@ const Case = ({estDecouvert, setGrilleEstDecouvert, creerGrille, estPremierClick
 
     return (
         <div
-            className={`border border-black flex items-center justify-center
-                ${estDecouvert === 0 ? ((position[0] + position[1]) % 2 === 0 ? "bg-gray-500" : "bg-gray-400") :
+            className={`flex items-center justify-center
+                ${estDecouvert === 0 ? ((position[0] + position[1]) % 2 === 0 ? "bg-[#8F939F]" : "bg-gray-400") :
                 (estDecouvert === 1 ? "bg-white" :
                     estDecouvert === 2 ? "bg-gray-700" : "bg-white")}`}
             onClick={handleLeftClick}
