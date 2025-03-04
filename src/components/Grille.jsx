@@ -75,35 +75,93 @@ function Grille({difficulte, data, dataUpdate, activerDefaite}) {
         setEstPremierClick(false);
     };
 
-    return (
-        <div className="flex w-full justify-center items-center my-4">
-            <div className="grid aspect-square w-full max-w-[85vh] gap-0" style={{
-                gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
-                gridTemplateRows: `repeat(${hauteur}, minmax(0, 1fr))`,
-                gap: 0
-            }}>
-                {grilleEtat.map((ligne, indice1) =>
-                    ligne.map((_, indice2) => {
-                        if (indice1 >= hauteur || indice2 >= largeur) return null;
-                        const estDecouvert = grilleEstDecouvert[indice1]?.[indice2];
-                        const etatCase = grilleEtat[indice1]?.[indice2];
-                        return (
-                            <Case
-                                key={`${indice1}-${indice2}`}
-                                position={[indice1, indice2]}
-                                setGrilleEstDecouvert={setGrilleEstDecouvert}
-                                creerGrille={creerGrille}
-                                estDecouvert={estDecouvert}
-                                etatCase={etatCase}
-                                estPremierClick={estPremierClick}
-                                activerDefaite={activerDefaite}
-                            />
-                        );
-                    })
-                )}
-            </div>
+    const decouvrirCase = (coord, grilleEtat) => {
+        setGrilleEstDecouvert(prev => {
+            console.log("----------------")
+            console.log(grilleEtat)
+            console.log("----------------")
+            const newGrilleEstDecouvert = prev.map(row => [...row]);
+
+            if (grilleEstDecouvert[coord[0]][coord[1]] === 0) {
+                newGrilleEstDecouvert[coord[0]][coord[1]] = 1;
+            } else if (grilleEstDecouvert[coord[0]][coord[1]] === 2) {
+                newGrilleEstDecouvert[coord[0]][coord[1]] = 0;
+            }
+
+            let i = coord[0]
+
+            while (i > -1) {
+                let j = coord[0]
+                explorerValeursColonnes(newGrilleEstDecouvert, i, j, coord[0]);
+                i--;
+            }
+            i = coord[0]
+
+            while (i < (grilleEtat.length)) {
+                let j = coord[0]
+                explorerValeursColonnes(newGrilleEstDecouvert, i, j, coord[0]);
+                i++;
+            }
+            return newGrilleEstDecouvert;
+        });
+    };
+
+    const explorerValeursColonnes = (newGrilleEstDecouvert, i, j, ligne) => {
+        let arreterRechColonne = false;
+        while (j > -1 && !arreterRechColonne) {
+            if (grilleEtat[i][j] === 0) {
+                newGrilleEstDecouvert[i][j] = 1;
+            } else if (grilleEtat[i][j] !== -1) {
+                newGrilleEstDecouvert[i][j] = 1;
+                arreterRechColonne = true;
+            }
+            j--;
+        }
+        arreterRechColonne = false;
+        j = ligne
+        while (j < (grilleEtat[0].length) && !arreterRechColonne) {
+            if (grilleEtat[i][j] === 0) {
+                newGrilleEstDecouvert[i][j] = 1;
+            } else if (grilleEtat[i][j] !== -1) {
+                newGrilleEstDecouvert[i][j] = 1;
+                arreterRechColonne = true;
+            }
+            j++;
+        }
+    };
+
+
+return (
+    <div className="flex w-full justify-center items-center my-4">
+        <div className="grid aspect-square w-full max-w-[85vh] gap-0" style={{
+            gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${hauteur}, minmax(0, 1fr))`,
+            gap: 0
+        }}>
+            {grilleEtat.map((ligne, indice1) =>
+                ligne.map((_, indice2) => {
+                    if (indice1 >= hauteur || indice2 >= largeur) return null;
+                    const estDecouvert = grilleEstDecouvert[indice1]?.[indice2];
+                    const etatCase = grilleEtat[indice1]?.[indice2];
+                    return (
+                        <Case
+                            key={`${indice1}-${indice2}`}
+                            position={[indice1, indice2]}
+                            setGrilleEstDecouvert={setGrilleEstDecouvert}
+                            creerGrille={creerGrille}
+                            estDecouvert={estDecouvert}
+                            etatCase={etatCase}
+                            grilleEtat={grilleEtat}
+                            decouvrirCase={decouvrirCase}
+                            estPremierClick={estPremierClick}
+                            activerDefaite={activerDefaite}
+                        />
+                    );
+                })
+            )}
         </div>
-    );
+    </div>
+);
 }
 
 export default Grille;

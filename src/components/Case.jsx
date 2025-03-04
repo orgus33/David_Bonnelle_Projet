@@ -1,25 +1,25 @@
 import PropTypes from 'prop-types';
 
-const Case = ({estDecouvert, setGrilleEstDecouvert, creerGrille, estPremierClick, etatCase, position, activerDefaite}) => {
+const Case = ({
+                  estDecouvert,
+                  setGrilleEstDecouvert,
+                  creerGrille,
+                  estPremierClick,
+                  etatCase,
+                  position,
+                  activerDefaite,
+                  decouvrirCase,
+                  grilleEtat
+              }) => {
     const handleLeftClick = () => {
 
         if (estPremierClick) {
             creerGrille(position);
         }
 
-        setGrilleEstDecouvert(prev => {
-            const newGrille = prev.map(row => [...row]);
+        decouvrirCase(position, grilleEtat);
 
-            if (estDecouvert === 0) {
-                newGrille[position[0]][position[1]] = 1;
-            } else if (estDecouvert === 2) {
-                newGrille[position[0]][position[1]] = 0;
-            }
-
-            return newGrille;
-        });
-
-        if(etatCase === -1){
+        if (etatCase === -1) {
             activerDefaite();
         }
 
