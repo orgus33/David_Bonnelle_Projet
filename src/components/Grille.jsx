@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import Case from "./Case.jsx";
 
-function Grille({difficulte, data, dataUpdate}) {
+function Grille({difficulte, data, dataUpdate, activerDefaite}) {
     const [hauteur, setHauteur] = useState(1);
     const [largeur, setLargeur] = useState(1);
     const [nbBombes, setNbBombes] = useState(10);
@@ -40,19 +40,37 @@ function Grille({difficulte, data, dataUpdate}) {
 
     const creerGrille = () => {
         let bombesPlacees = 0;
+        const newGrilleEtat = Array.from({ length: hauteur }, () => Array(largeur).fill(0));
+
         while (bombesPlacees < nbBombes) {
             const x = Math.floor(Math.random() * hauteur);
             const y = Math.floor(Math.random() * largeur);
 
-            if (grilleEtat[x][y] === -1) continue;
+            if (newGrilleEtat[x][y] === -1) continue;
 
-            setGrilleEtat((prevGrilleEtat) => {
-                const newGrilleEtat = [...prevGrilleEtat];
-                newGrilleEtat[x][y] = -1;
-                return newGrilleEtat;
-            });
+            newGrilleEtat[x][y] = -1;
             bombesPlacees++;
         }
+
+        for (let i = 0; i < hauteur; i++) {
+            for (let j = 0; j < largeur; j++) {
+                if (newGrilleEtat[i][j] === -1) continue;
+
+                let bombCount = 0;
+                for (let dx = -1; dx <= 1; dx++) {
+                    for (let dy = -1; dy <= 1; dy++) {
+                        const ni = i + dx;
+                        const nj = j + dy;
+                        if (ni >= 0 && ni < hauteur && nj >= 0 && nj < largeur && newGrilleEtat[ni][nj] === -1) {
+                            bombCount++;
+                        }
+                    }
+                }
+                newGrilleEtat[i][j] = bombCount;
+            }
+        }
+
+        setGrilleEtat(newGrilleEtat);
         setEstPremierClick(false);
     };
 
@@ -77,6 +95,7 @@ function Grille({difficulte, data, dataUpdate}) {
                                 estDecouvert={estDecouvert}
                                 etatCase={etatCase}
                                 estPremierClick={estPremierClick}
+                                activerDefaite={activerDefaite}
                             />
                         );
                     })

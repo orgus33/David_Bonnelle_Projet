@@ -4,7 +4,8 @@ import Grille from "./components/Grille.jsx";
 const Jeu = () => {
     const [difficulte, setDifficulte] = useState(1);
     const [dataJeu, setDataJeu] = useState([1, 0]);
-    const [isOpen, setIsOpen] = useState(false);
+    const [montrerRegles, setMontrerRegles] = useState(false);
+    const [montrerModalDefaite, setMontrerModalDefaite] = useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -14,8 +15,17 @@ const Jeu = () => {
     }, []);
 
     const togglePopover = () => {
-        setIsOpen(!isOpen);
+        setMontrerRegles(!montrerRegles);
     };
+
+    const activerDefaite = () => {
+        setMontrerModalDefaite(true); // Update this function
+    };
+
+    const closeModal = () => {
+        setMontrerModalDefaite(false);
+    };
+
     return (
         <div>
             <div className="flex flex-row justify-between p-3 bg-gray-200">
@@ -64,7 +74,7 @@ const Jeu = () => {
                         </div>
 
                     </button>
-                    {isOpen && (
+                    {montrerRegles && (
                         <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
                             <div className="p-4 text-sm text-gray-700">
                                 <p><strong>Click gauche:</strong> Dévoiler la case <br></br><strong>Click droit :</strong> Mettre un drapeau</p>
@@ -73,7 +83,21 @@ const Jeu = () => {
                     )}
                 </div>
             </div>
-            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={setDataJeu}/>
+            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={setDataJeu} activerDefaite={activerDefaite}/>
+            {montrerModalDefaite && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-4 rounded shadow-lg flex flex-col items-center gap-2">
+                        <h2 className="text-xl w-full border-b-2 border-gray-500 text-center">Défaite</h2>
+                        <p>Vous avez perdu ! Rejouer ?</p>
+                        <button
+                            onClick={closeModal}
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        >
+                            Rejouer
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
