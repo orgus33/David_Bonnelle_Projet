@@ -4,7 +4,7 @@ const Case = ({estDecouvert, setGrilleEstDecouvert, creerGrille, estPremierClick
     const handleLeftClick = () => {
 
         if (estPremierClick) {
-            creerGrille();
+            creerGrille(position);
         }
 
         setGrilleEstDecouvert(prev => {
@@ -16,9 +16,9 @@ const Case = ({estDecouvert, setGrilleEstDecouvert, creerGrille, estPremierClick
                 newGrille[position[0]][position[1]] = 0;
             }
 
-
             return newGrille;
         });
+
         if(etatCase === -1){
             activerDefaite();
         }

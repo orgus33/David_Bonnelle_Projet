@@ -34,19 +34,20 @@ function Grille({difficulte, data, dataUpdate, activerDefaite}) {
         setLargeur(newLargeur);
         setNbBombes(newNbBombes);
 
-        setGrilleEtat(Array.from({ length: newHauteur }, () => Array(newLargeur).fill(0)));
-        setGrilleEstDecouvert(Array.from({ length: newHauteur }, () => Array(newLargeur).fill(0)));
+        setGrilleEtat(Array.from({length: newHauteur}, () => Array(newLargeur).fill(0)));
+        setGrilleEstDecouvert(Array.from({length: newHauteur}, () => Array(newLargeur).fill(0)));
     }, [difficulte]);
 
-    const creerGrille = () => {
+    const creerGrille = (coord) => {
         let bombesPlacees = 0;
-        const newGrilleEtat = Array.from({ length: hauteur }, () => Array(largeur).fill(0));
+        const newGrilleEtat = Array.from({length: hauteur}, () => Array(largeur).fill(0));
 
         while (bombesPlacees < nbBombes) {
             const x = Math.floor(Math.random() * hauteur);
             const y = Math.floor(Math.random() * largeur);
 
-            if (newGrilleEtat[x][y] === -1) continue;
+            if ((x === coord[0] && y === coord[1]) || (x === coord[0] - 1) || (x === coord[0] + 1)
+                || (y === coord[1] - 1) || (y === coord[1] + 1) || newGrilleEtat[x][y] === -1) continue;
 
             newGrilleEtat[x][y] = -1;
             bombesPlacees++;
@@ -56,17 +57,17 @@ function Grille({difficulte, data, dataUpdate, activerDefaite}) {
             for (let j = 0; j < largeur; j++) {
                 if (newGrilleEtat[i][j] === -1) continue;
 
-                let bombCount = 0;
-                for (let dx = -1; dx <= 1; dx++) {
-                    for (let dy = -1; dy <= 1; dy++) {
-                        const ni = i + dx;
-                        const nj = j + dy;
-                        if (ni >= 0 && ni < hauteur && nj >= 0 && nj < largeur && newGrilleEtat[ni][nj] === -1) {
-                            bombCount++;
+                let bombesTrouvees = 0;
+                for (let y = -1; y <= 1; y++) {
+                    for (let x = -1; x <= 1; x++) {
+                        const indiceY = i + y;
+                        const indiceX = j + x;
+                        if (indiceY >= 0 && indiceY < hauteur && indiceX >= 0 && indiceX < largeur && newGrilleEtat[indiceY][indiceX] === -1) {
+                            bombesTrouvees++;
                         }
                     }
                 }
-                newGrilleEtat[i][j] = bombCount;
+                newGrilleEtat[i][j] = bombesTrouvees;
             }
         }
 
