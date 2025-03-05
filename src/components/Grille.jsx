@@ -133,7 +133,7 @@ function Grille({difficulte, data, dataUpdate, activerDefaite}) {
 
 return (
     <div className="flex w-full justify-center items-center my-4">
-        <div className="grid aspect-square w-full max-w-[85vh] gap-0" style={{
+        <div className="border grid aspect-square w-full max-w-[85vh] gap-0" style={{
             gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
             gridTemplateRows: `repeat(${hauteur}, minmax(0, 1fr))`,
             gap: 0
