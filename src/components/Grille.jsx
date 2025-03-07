@@ -102,14 +102,14 @@ function Grille({difficulte, activerDefaite}) {
         let i = coord[0]
 
         while (i > -1) {
-            let j = coord[0]
+            let j = coord[1]
             explorerValeursColonnes(newGrilleEstDecouvert, i, j, coord[0], grilleEtatNoSetState ?? grilleEtat);
             i--;
         }
         i = coord[0]
 
         while (i < (grilleEtatNoSetState !== null ? grilleEtatNoSetState.length : grilleEtat.length)) {
-            let j = coord[0]
+            let j = coord[1]
             explorerValeursColonnes(newGrilleEstDecouvert, i, j, coord[0], grilleEtatNoSetState ?? grilleEtat);
             i++;
         }
