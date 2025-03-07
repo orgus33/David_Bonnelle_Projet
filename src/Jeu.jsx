@@ -90,7 +90,7 @@ const Jeu = () => {
                     )}
                 </div>
             </div>
-            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={setDataJeu} activerDefaite={activerDefaite}/>
+            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={setDataJeu} activerDefaite={activerDefaite} />
             {montrerModalDefaite && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-4 rounded shadow-lg flex flex-col items-center gap-2">
