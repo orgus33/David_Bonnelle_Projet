@@ -1,0 +1,6 @@
+projectKey=Belette-Front
+serverUrl=http://localhost:9000
+serverVersion=25.3.0.104237
+dashboardUrl=http://localhost:9000/dashboard?id=Belette-Front
+ceTaskId=d6685fa9-0a08-4096-b50f-16c71892fadd
+ceTaskUrl=http://localhost:9000/api/ce/task?id=d6685fa9-0a08-4096-b50f-16c71892fadd

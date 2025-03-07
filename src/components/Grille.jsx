@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
 import Case from "./Case.jsx";
+import PropTypes from "prop-types";
 
-function Grille({difficulte, data, dataUpdate, activerDefaite}) {
+function Grille({difficulte, activerDefaite}) {
     const [hauteur, setHauteur] = useState(1);
     const [largeur, setLargeur] = useState(1);
     const [nbBombes, setNbBombes] = useState(10);
@@ -129,8 +130,6 @@ function Grille({difficulte, data, dataUpdate, activerDefaite}) {
             j++;
         }
     };
-
-
 return (
     <div className="flex w-full justify-center items-center my-4">
         <div className="border grid aspect-square w-full max-w-[85vh] gap-0" style={{
@@ -163,5 +162,10 @@ return (
     </div>
 );
 }
+
+Grille.propTypes = {
+    difficulte: PropTypes.number.isRequired,
+    activerDefaite: PropTypes.func.isRequired,
+};
 
 export default Grille;
