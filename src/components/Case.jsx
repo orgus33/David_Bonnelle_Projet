@@ -22,13 +22,13 @@ const Case = ({
         if (etatCase === -1) {
             activerDefaite();
         }
-
     };
 
     const handleRightClick = (event) => {
         event.preventDefault();
         setGrilleEstDecouvert(prev => {
             const newGrille = prev.map(row => [...row]);
+
 
             if (estDecouvert === 0) {
                 newGrille[position[0]][position[1]] = 2;

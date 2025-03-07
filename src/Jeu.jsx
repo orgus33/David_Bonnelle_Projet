@@ -14,6 +14,13 @@ const Jeu = () => {
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setDataJeu(([drapeaux, temps]) => [drapeaux, ++temps]);
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
     const togglePopover = () => {
         setMontrerRegles(!montrerRegles);
     };

@@ -29,6 +29,7 @@ function Grille({difficulte, activerDefaite}) {
                 newLargeur = 20;
                 newNbBombes = 100;
                 break;
+
         }
 
         setHauteur(newHauteur);
@@ -162,6 +163,7 @@ return (
     </div>
 );
 }
+
 
 Grille.propTypes = {
     difficulte: PropTypes.number.isRequired,

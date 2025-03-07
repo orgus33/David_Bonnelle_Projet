@@ -3,7 +3,7 @@ Projets des étudiants en BUT Info 2024-2025
 
 # Projet de Développement de Jeux
 ## Langage de programmation au choix
-Date de Remise : 31/11/2024 à 23h59 – MAX
+Date de Remise : 16/03/2025
 
 Chaque jour de retard entrainera une pénalité.
 
