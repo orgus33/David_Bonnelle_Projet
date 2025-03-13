@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import Case from "./Case.jsx";
 import PropTypes from "prop-types";
 
-function Grille({difficulte, activerDefaite}) {
+function Grille({difficulte, activerDefaite, estDebut, setEstDebut}) {
     const [hauteur, setHauteur] = useState(1);
     const [largeur, setLargeur] = useState(1);
     const [nbBombes, setNbBombes] = useState(10);
@@ -11,8 +11,19 @@ function Grille({difficulte, activerDefaite}) {
     const [grilleEstDecouvert, setGrilleEstDecouvert] = useState([]);
 
     useEffect(() => {
-        let newHauteur, newLargeur, newNbBombes;
+        InitValeursPourDifficulte();
+    }, [difficulte]);
 
+    useEffect(() => {
+        if(estDebut){
+            InitValeursPourDifficulte();
+            setEstPremierClick(true);
+            setEstDebut(false);
+        }
+    }, [estDebut]);
+
+    const InitValeursPourDifficulte = () => {
+        let newHauteur, newLargeur, newNbBombes;
         switch (difficulte) {
             case 1:
                 newHauteur = 10;
@@ -38,7 +49,7 @@ function Grille({difficulte, activerDefaite}) {
 
         setGrilleEtat(Array.from({length: newHauteur}, () => Array(newLargeur).fill(0)));
         setGrilleEstDecouvert(Array.from({length: newHauteur}, () => Array(newLargeur).fill(0)));
-    }, [difficulte]);
+    }
 
     const creerGrille = (coord) => {
         let bombesPlacees = 0;
@@ -122,7 +133,6 @@ function Grille({difficulte, activerDefaite}) {
 
     const explorerValeursColonnes = (newGrilleEstDecouvert, i, j, colonneDepart, grilleEtat) => {
         let arreterRechColonne = false;
-        console.log(grilleEtat)
 
         while (j > -1 && !arreterRechColonne) {
             if (grilleEtat[i][j] === 0) {
@@ -180,7 +190,10 @@ function Grille({difficulte, activerDefaite}) {
 
 
 Grille.propTypes = {
-    difficulte: PropTypes.number.isRequired, activerDefaite: PropTypes.func.isRequired,
+    difficulte: PropTypes.number.isRequired,
+    activerDefaite: PropTypes.func.isRequired,
+    estDebut: PropTypes.bool.isRequired,
+    setEstDebut: PropTypes.func.isRequired,
 };
 
 export default Grille;

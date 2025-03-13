@@ -17,7 +17,7 @@ const Case = ({
             decouvrirCase(position);
         }
 
-        if (etatCase === -1 && estDecouvert === 1) {
+        if (etatCase === -1 && estDecouvert === 0) {
             activerDefaite();
         }
     };

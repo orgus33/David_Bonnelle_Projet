@@ -2,17 +2,11 @@ import {useEffect, useState} from "react";
 import Grille from "./components/Grille.jsx";
 
 const Jeu = () => {
+    const [estDebut, setEstDebut] = useState(true);
     const [difficulte, setDifficulte] = useState(1);
     const [dataJeu, setDataJeu] = useState([1, 0]);
     const [montrerRegles, setMontrerRegles] = useState(false);
     const [montrerModalDefaite, setMontrerModalDefaite] = useState(false);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setDataJeu(([drapeaux, temps]) => [drapeaux, ++temps]);
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -26,10 +20,12 @@ const Jeu = () => {
     };
 
     const activerDefaite = () => {
-        setMontrerModalDefaite(true); // Update this function
+        setMontrerModalDefaite(true);
     };
 
     const closeModal = () => {
+        setDataJeu( [1, 0]);
+        setEstDebut(true);
         setMontrerModalDefaite(false);
     };
 
@@ -90,7 +86,7 @@ const Jeu = () => {
                     )}
                 </div>
             </div>
-            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={setDataJeu} activerDefaite={activerDefaite} />
+            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={setDataJeu} activerDefaite={activerDefaite} estDebut={estDebut} setEstDebut={setEstDebut}/>
             {montrerModalDefaite && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-4 rounded shadow-lg flex flex-col items-center gap-2">
