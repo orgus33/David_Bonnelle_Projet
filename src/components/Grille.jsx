@@ -48,8 +48,7 @@ function Grille({difficulte, activerDefaite}) {
             const x = Math.floor(Math.random() * hauteur);
             const y = Math.floor(Math.random() * largeur);
 
-            if ((x === coord[0] && y === coord[1]) || (x === coord[0] - 1) || (x === coord[0] + 1)
-                || (y === coord[1] - 1) || (y === coord[1] + 1) || newGrilleEtat[x][y] === -1) continue;
+            if ((x === coord[0] && y === coord[1]) || (x === coord[0] - 1) || (x === coord[0] + 1) || (y === coord[1] - 1) || (y === coord[1] + 1) || newGrilleEtat[x][y] === -1) continue;
 
             newGrilleEtat[x][y] = -1;
             bombesPlacees++;
@@ -79,18 +78,7 @@ function Grille({difficulte, activerDefaite}) {
         decouvrirCase(coord, newGrilleEtat)
     };
 
-    useEffect(() => {
-        console.log(grilleEstDecouvert)
-    }, [grilleEstDecouvert]);
-
     const decouvrirCase = (coord, grilleEtatNoSetState = null) => {
-
-        console.log("----------------")
-        console.log(grilleEtat)
-        console.log(grilleEtatNoSetState);
-        console.log(grilleEstDecouvert);
-        console.log("----------------")
-
         const newGrilleEstDecouvert = grilleEstDecouvert.map(row => [...row]);
 
         if (grilleEstDecouvert[coord[0]][coord[1]] === 0) {
@@ -99,85 +87,100 @@ function Grille({difficulte, activerDefaite}) {
             newGrilleEstDecouvert[coord[0]][coord[1]] = 0;
         }
 
-        let i = coord[0]
+        if (grilleEtatNoSetState !== null && grilleEtatNoSetState[coord[0]][coord[1]] !== -1) {
+            let i = coord[0]
 
-        while (i > -1) {
-            let j = coord[1]
-            explorerValeursColonnes(newGrilleEstDecouvert, i, j, coord[0], grilleEtatNoSetState ?? grilleEtat);
-            i--;
-        }
-        i = coord[0]
+            let arreterRechLigne = false;
+            while (i > -1 && !arreterRechLigne) {
+                let j = coord[1]
+                explorerValeursColonnes(newGrilleEstDecouvert, i, j, coord[1], grilleEtatNoSetState ?? grilleEtat);
+                arreterRechLigne = grilleEtatNoSetState[i][j] > 0
+                if ((i - 1) > -1) {
+                    arreterRechLigne = arreterRechLigne && grilleEtatNoSetState[i - 1][j] < 0;
+                }
+                i--;
+            }
 
-        while (i < (grilleEtatNoSetState !== null ? grilleEtatNoSetState.length : grilleEtat.length)) {
-            let j = coord[1]
-            explorerValeursColonnes(newGrilleEstDecouvert, i, j, coord[0], grilleEtatNoSetState ?? grilleEtat);
-            i++;
+            i = coord[0] + 1
+
+            arreterRechLigne = false;
+            while (i < (grilleEtatNoSetState != null ? grilleEtatNoSetState.length : grilleEtat.length)
+            && !arreterRechLigne) {
+                let j = coord[1] + 1
+                explorerValeursColonnes(newGrilleEstDecouvert, i, j, coord[1], grilleEtatNoSetState ?? grilleEtat);
+                arreterRechLigne = grilleEtatNoSetState[i][j] > 0
+                if ((i + 1) < (grilleEtatNoSetState != null ? grilleEtatNoSetState.length : grilleEtat.length)) {
+                    arreterRechLigne = arreterRechLigne && grilleEtatNoSetState[i + 1][j] < 0;
+                }
+                i++;
+            }
         }
+
 
         setGrilleEstDecouvert(newGrilleEstDecouvert);
     };
 
-    const explorerValeursColonnes = (newGrilleEstDecouvert, i, j, ligne, grilleEtat) => {
+    const explorerValeursColonnes = (newGrilleEstDecouvert, i, j, colonneDepart, grilleEtat) => {
         let arreterRechColonne = false;
+        console.log(grilleEtat)
+
         while (j > -1 && !arreterRechColonne) {
             if (grilleEtat[i][j] === 0) {
                 newGrilleEstDecouvert[i][j] = 1;
             } else if (grilleEtat[i][j] !== -1) {
                 newGrilleEstDecouvert[i][j] = 1;
-                arreterRechColonne = true;
+                if ((j - 1) > -1) {
+                    arreterRechColonne = grilleEtat[i][j - 1] < 0;
+                }
             }
             j--;
         }
+
         arreterRechColonne = false;
-        j = ligne
+        j = colonneDepart + 1;
         while (j < (grilleEtat[0].length) && !arreterRechColonne) {
             if (grilleEtat[i][j] === 0) {
                 newGrilleEstDecouvert[i][j] = 1;
             } else if (grilleEtat[i][j] !== -1) {
                 newGrilleEstDecouvert[i][j] = 1;
-                arreterRechColonne = true;
+                if ((j + 1) < grilleEtat[0].length) {
+                    arreterRechColonne = grilleEtat[i][j + 1] < 0;
+                }
             }
             j++;
         }
     };
 
 
-    return (
-        <div className="flex w-full justify-center items-center my-4">
-            <div className="border grid aspect-square w-full max-w-[85vh] gap-0" style={{
-                gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
-                gridTemplateRows: `repeat(${hauteur}, minmax(0, 1fr))`,
-                gap: 0
-            }}>
-                {grilleEtat.map((ligne, indice1) =>
-                    ligne.map((_, indice2) => {
-                        if (indice1 >= hauteur || indice2 >= largeur) return null;
-                        const estDecouvert = grilleEstDecouvert[indice1]?.[indice2];
-                        const etatCase = grilleEtat[indice1]?.[indice2];
-                        return (
-                            <Case
-                                key={`${indice1}-${indice2}`}
-                                position={[indice1, indice2]}
-                                setGrilleEstDecouvert={setGrilleEstDecouvert}
-                                creerGrille={creerGrille}
-                                estDecouvert={estDecouvert}
-                                etatCase={etatCase}
-                                decouvrirCase={decouvrirCase}
-                                estPremierClick={estPremierClick}
-                                activerDefaite={activerDefaite}
-                            />
-                        );
-                    })
-                )}
-            </div>
+    return (<div className="flex w-full justify-center items-center my-4">
+        <div className="border grid aspect-square w-full max-w-[85vh] gap-0" style={{
+            gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${hauteur}, minmax(0, 1fr))`,
+            gap: 0
+        }}>
+            {grilleEtat.map((ligne, indice1) => ligne.map((_, indice2) => {
+                if (indice1 >= hauteur || indice2 >= largeur) return null;
+                const estDecouvert = grilleEstDecouvert[indice1]?.[indice2];
+                const etatCase = grilleEtat[indice1]?.[indice2];
+                return (<Case
+                    key={`${indice1}-${indice2}`}
+                    position={[indice1, indice2]}
+                    setGrilleEstDecouvert={setGrilleEstDecouvert}
+                    creerGrille={creerGrille}
+                    estDecouvert={estDecouvert}
+                    etatCase={etatCase}
+                    decouvrirCase={decouvrirCase}
+                    estPremierClick={estPremierClick}
+                    activerDefaite={activerDefaite}
+                />);
+            }))}
         </div>
-    );
+    </div>);
 }
 
 
 Grille.propTypes = {
-    difficulte: PropTypes.number.isRequired,
-    activerDefaite: PropTypes.func.isRequired,
+    difficulte: PropTypes.number.isRequired, activerDefaite: PropTypes.func.isRequired,
 };
 
 export default Grille;
