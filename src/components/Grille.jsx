@@ -160,8 +160,6 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut}) {
             j++;
         }
     };
-
-
     return (<div className="flex w-full justify-center items-center my-4">
         <div className="border grid aspect-square w-full max-w-[85vh] gap-0" style={{
             gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,

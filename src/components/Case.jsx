@@ -11,6 +11,7 @@ const Case = ({
                   decouvrirCase
               }) => {
     const handleLeftClick = () => {
+
         if (estPremierClick) {
             creerGrille(position);
         } else {
@@ -47,7 +48,6 @@ const Case = ({
     };
 
     return (
-
 
         <button
             className={`flex items-center justify-center ${getBackgroundColor()}`}
