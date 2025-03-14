@@ -161,7 +161,7 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut}) {
         }
     };
     return (<div className="flex w-full justify-center items-center my-4">
-        <div className="border grid aspect-square w-full max-w-[85vh] gap-0" style={{
+        <div className="border rounded-xl overflow-hidden grid aspect-square w-full max-w-[85vh] gap-0" style={{
             gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
             gridTemplateRows: `repeat(${hauteur}, minmax(0, 1fr))`,
             gap: 0
