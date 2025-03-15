@@ -37,13 +37,17 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut, setEstVictoi
         setHauteur(newHauteur);
         setLargeur(newLargeur);
         setNbBombes(newNbBombes);
-        setDataJeu([newNbDrapeaux, dataJeu[1]]);
+        setDataJeu([newNbDrapeaux, 0]);
 
         setGrilleEtat(Array.from({ length: newHauteur }, () => Array(newLargeur).fill(0)));
         setGrilleEstDecouvert(Array.from({ length: newHauteur }, () => Array(newLargeur).fill(0)));
         setEstDebut(true);
         setEstVictoire(false);
-    }, [difficulte, setDataJeu, dataJeu, setEstDebut, setEstVictoire]);
+    }, [difficulte, setDataJeu, setEstDebut, setEstVictoire]);
+
+    useEffect(() => {
+        InitValeursPourDifficulte();
+    }, [difficulte, InitValeursPourDifficulte]);
 
     useEffect(() => {
         if (estDebut) {
