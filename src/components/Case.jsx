@@ -39,18 +39,21 @@ const Case = ({
     };
 
     const getBackgroundColor = () => {
-        if (estDecouvert === 0) {
-            return (position[0] + position[1]) % 2 === 0 ? "bg-[#8F939F]" : "bg-gray-400";
+        if (estDecouvert === 0 || estDecouvert === 2) {
+            return (position[0] + position[1]) % 2 === 0 ? "bg-[#b4d567]" : "bg-[#adcf60]";
         }
-        if (estDecouvert === 1) return "bg-white";
-        if (estDecouvert === 2) return "bg-gray-700";
+
+        if (estDecouvert === 1) {
+            return (position[0] + position[1]) % 2 === 0 ? "bg-[#cfb99d]" : "bg-[#dcc3a4]";
+        }
+
         return "bg-white";
     };
 
     return (
 
         <button
-            className={`flex items-center justify-center ${getBackgroundColor()}`}
+            className={`flex items-center justify-center hover:bg-[#cfcfcf54] ${getBackgroundColor()}`}
             tabIndex={0}
             onClick={handleLeftClick}
             onContextMenu={(e) => handleRightClick(e)}
