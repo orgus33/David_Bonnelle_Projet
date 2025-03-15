@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
 import Case from "./Case.jsx";
 import PropTypes from "prop-types";
+import { useEffect, useState, useCallback } from "react";
 
-function Grille({difficulte, activerDefaite, estDebut, setEstDebut}) {
+function Grille({difficulte, activerDefaite, estDebut, setEstDebut, setEstVictoire, dataJeu, setDataJeu}) {
     const [hauteur, setHauteur] = useState(1);
     const [largeur, setLargeur] = useState(1);
     const [nbBombes, setNbBombes] = useState(10);
@@ -10,46 +10,52 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut}) {
     const [grilleEtat, setGrilleEtat] = useState([]);
     const [grilleEstDecouvert, setGrilleEstDecouvert] = useState([]);
 
-    useEffect(() => {
-        InitValeursPourDifficulte();
-    }, [difficulte]);
+    const InitValeursPourDifficulte = useCallback(() => {
+        let newHauteur, newLargeur, newNbBombes, newNbDrapeaux;
 
-    useEffect(() => {
-        if(estDebut){
-            InitValeursPourDifficulte();
-            setEstPremierClick(true);
-            setEstDebut(false);
-        }
-    }, [estDebut]);
-
-    const InitValeursPourDifficulte = () => {
-        let newHauteur, newLargeur, newNbBombes;
         switch (difficulte) {
             case 1:
                 newHauteur = 10;
                 newLargeur = 10;
                 newNbBombes = 20;
+                newNbDrapeaux = 25;
                 break;
             case 2:
                 newHauteur = 15;
                 newLargeur = 15;
                 newNbBombes = 50;
+                newNbDrapeaux = 70;
                 break;
             default:
                 newHauteur = 20;
                 newLargeur = 20;
                 newNbBombes = 100;
+                newNbDrapeaux = 120;
                 break;
-
         }
 
         setHauteur(newHauteur);
         setLargeur(newLargeur);
         setNbBombes(newNbBombes);
+        setDataJeu([newNbDrapeaux, 0]);
 
-        setGrilleEtat(Array.from({length: newHauteur}, () => Array(newLargeur).fill(0)));
-        setGrilleEstDecouvert(Array.from({length: newHauteur}, () => Array(newLargeur).fill(0)));
-    }
+        setGrilleEtat(Array.from({ length: newHauteur }, () => Array(newLargeur).fill(0)));
+        setGrilleEstDecouvert(Array.from({ length: newHauteur }, () => Array(newLargeur).fill(0)));
+        setEstDebut(true);
+        setEstVictoire(false);
+    }, [difficulte, setDataJeu, setEstDebut, setEstVictoire]);
+
+    useEffect(() => {
+        InitValeursPourDifficulte();
+    }, [difficulte, InitValeursPourDifficulte]);
+
+    useEffect(() => {
+        if (estDebut) {
+            InitValeursPourDifficulte();
+            setEstPremierClick(true);
+            setEstDebut(false);
+        }
+    }, [estDebut, InitValeursPourDifficulte, setEstDebut]);
 
     const creerGrille = (coord) => {
         let bombesPlacees = 0;
@@ -85,7 +91,7 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut}) {
 
         setGrilleEtat(newGrilleEtat);
         setEstPremierClick(false);
-
+        setEstVictoire(false);
         decouvrirCase(coord, newGrilleEtat)
     };
 
@@ -96,6 +102,7 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut}) {
             newGrilleEstDecouvert[coord[0]][coord[1]] = 1;
         } else if (grilleEstDecouvert[coord[0]][coord[1]] === 2) {
             newGrilleEstDecouvert[coord[0]][coord[1]] = 0;
+            setDataJeu([dataJeu[0] + 1, dataJeu[1]]);
         }
 
         if (grilleEtatNoSetState !== null && grilleEtatNoSetState[coord[0]][coord[1]] !== -1) {
@@ -127,8 +134,17 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut}) {
             }
         }
 
-
         setGrilleEstDecouvert(newGrilleEstDecouvert);
+        VerifierVictoire();
+    };
+
+    const VerifierVictoire = () => {
+        let nbCasesDrapeaux = grilleEstDecouvert.flat().filter(x => x === 2).length;
+        let nbCasesBombes = grilleEtat.flat().filter(x => x === - 1).length;
+        if(nbCasesDrapeaux !== 0 && nbCasesBombes !== 0 && (nbCasesDrapeaux === nbCasesBombes)) {
+            setEstVictoire(true);
+            console.log('VICTOIRE');
+        }
     };
 
     const explorerValeursColonnes = (newGrilleEstDecouvert, i, j, colonneDepart, grilleEtat) => {
@@ -160,6 +176,7 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut}) {
             j++;
         }
     };
+
     return (<div className="flex w-full justify-center items-center my-4">
         <div className="border rounded-xl overflow-hidden grid aspect-square w-full max-w-[85vh] gap-0" style={{
             gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
@@ -180,6 +197,9 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut}) {
                     decouvrirCase={decouvrirCase}
                     estPremierClick={estPremierClick}
                     activerDefaite={activerDefaite}
+                    dataJeu={dataJeu}
+                    setDataJeu={setDataJeu}
+                    verifierVictoire={VerifierVictoire}
                 />);
             }))}
         </div>
@@ -192,6 +212,9 @@ Grille.propTypes = {
     activerDefaite: PropTypes.func.isRequired,
     estDebut: PropTypes.bool.isRequired,
     setEstDebut: PropTypes.func.isRequired,
+    setEstVictoire: PropTypes.func.isRequired,
+    dataJeu: PropTypes.arrayOf(PropTypes.number).isRequired,
+    setDataJeu: PropTypes.func.isRequired,
 };
 
 export default Grille;

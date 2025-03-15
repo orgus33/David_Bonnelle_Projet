@@ -8,7 +8,10 @@ const Case = ({
                   etatCase,
                   position,
                   activerDefaite,
-                  decouvrirCase
+                  decouvrirCase,
+                  dataJeu,
+                  setDataJeu,
+                  verifierVictoire,
               }) => {
     const handleLeftClick = () => {
 
@@ -31,11 +34,14 @@ const Case = ({
 
             if (estDecouvert === 0) {
                 newGrille[position[0]][position[1]] = 2;
+                setDataJeu([dataJeu[0] - 1, dataJeu[1]]);
             } else if (estDecouvert === 2) {
                 newGrille[position[0]][position[1]] = 0;
+                setDataJeu([dataJeu[0] + 1, dataJeu[1]]);
             }
             return newGrille;
         });
+        verifierVictoire();
     };
 
     const getBackgroundColor = () => {
@@ -89,6 +95,9 @@ Case.propTypes = {
     position: PropTypes.arrayOf(PropTypes.number).isRequired,
     activerDefaite: PropTypes.func.isRequired,
     decouvrirCase: PropTypes.func.isRequired,
+    dataJeu: PropTypes.arrayOf(PropTypes.number).isRequired,
+    setDataJeu: PropTypes.func.isRequired,
+    verifierVictoire: PropTypes.func.isRequired,
 };
 
 export default Case;
