@@ -11,6 +11,7 @@ const Case = ({
                   decouvrirCase,
                   dataJeu,
                   setDataJeu,
+                  verifierVictoire,
               }) => {
     const handleLeftClick = () => {
 
@@ -40,6 +41,7 @@ const Case = ({
             }
             return newGrille;
         });
+        verifierVictoire();
     };
 
     const getBackgroundColor = () => {
@@ -95,6 +97,7 @@ Case.propTypes = {
     decouvrirCase: PropTypes.func.isRequired,
     dataJeu: PropTypes.arrayOf(PropTypes.number).isRequired,
     setDataJeu: PropTypes.func.isRequired,
+    verifierVictoire: PropTypes.func.isRequired,
 };
 
 export default Case;

@@ -7,6 +7,7 @@ const Jeu = () => {
     const [dataJeu, setDataJeu] = useState([1, 0]);
     const [montrerRegles, setMontrerRegles] = useState(false);
     const [montrerModalDefaite, setMontrerModalDefaite] = useState(false);
+    const [estVictoire, setEstVictoire] = useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -86,12 +87,26 @@ const Jeu = () => {
                     )}
                 </div>
             </div>
-            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={setDataJeu} activerDefaite={activerDefaite} estDebut={estDebut} setEstDebut={setEstDebut} dataJeu={dataJeu} setDataJeu={setDataJeu}/>
+            <Grille difficulte={difficulte} data={dataJeu} dataUpdate={setDataJeu} activerDefaite={activerDefaite} estDebut={estDebut} setEstDebut={setEstDebut} dataJeu={dataJeu} setDataJeu={setDataJeu} setEstVictoire={setEstVictoire}/>
             {montrerModalDefaite && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-4 rounded shadow-lg flex flex-col items-center gap-2">
                         <h2 className="text-xl w-full border-b-2 border-gray-500 text-center">Défaite</h2>
                         <p>Vous avez perdu ! Rejouer ?</p>
+                        <button
+                            onClick={closeModal}
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        >
+                            Rejouer
+                        </button>
+                    </div>
+                </div>
+            )}
+            {estVictoire && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-4 rounded shadow-lg flex flex-col items-center gap-2">
+                        <h2 className="text-xl w-full border-b-2 border-gray-500 text-center">Victoire</h2>
+                        <p>Bravo, vous avez gagné en {dataJeu[1]} secondes! Rejouer ?</p>
                         <button
                             onClick={closeModal}
                             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"

@@ -2,7 +2,7 @@ import Case from "./Case.jsx";
 import PropTypes from "prop-types";
 import { useEffect, useState, useCallback } from "react";
 
-function Grille({difficulte, activerDefaite, estDebut, setEstDebut, dataJeu, setDataJeu}) {
+function Grille({difficulte, activerDefaite, estDebut, setEstDebut, setEstVictoire, dataJeu, setDataJeu}) {
     const [hauteur, setHauteur] = useState(1);
     const [largeur, setLargeur] = useState(1);
     const [nbBombes, setNbBombes] = useState(10);
@@ -42,11 +42,8 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut, dataJeu, set
         setGrilleEtat(Array.from({ length: newHauteur }, () => Array(newLargeur).fill(0)));
         setGrilleEstDecouvert(Array.from({ length: newHauteur }, () => Array(newLargeur).fill(0)));
         setEstDebut(true);
-    }, [difficulte, setDataJeu, dataJeu, setEstDebut]);
-
-    useEffect(() => {
-        InitValeursPourDifficulte();
-    }, [difficulte, InitValeursPourDifficulte]);
+        setEstVictoire(false);
+    }, [difficulte, setDataJeu, dataJeu, setEstDebut, setEstVictoire]);
 
     useEffect(() => {
         if (estDebut) {
@@ -90,7 +87,7 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut, dataJeu, set
 
         setGrilleEtat(newGrilleEtat);
         setEstPremierClick(false);
-
+        setEstVictoire(false);
         decouvrirCase(coord, newGrilleEtat)
     };
 
@@ -133,8 +130,17 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut, dataJeu, set
             }
         }
 
-
         setGrilleEstDecouvert(newGrilleEstDecouvert);
+        VerifierVictoire();
+    };
+
+    const VerifierVictoire = () => {
+        let nbCasesDrapeaux = grilleEstDecouvert.flat().filter(x => x === 2).length;
+        let nbCasesBombes = grilleEtat.flat().filter(x => x === - 1).length;
+        if(nbCasesDrapeaux !== 0 && nbCasesBombes !== 0 && (nbCasesDrapeaux === nbCasesBombes)) {
+            setEstVictoire(true);
+            console.log('VICTOIRE');
+        }
     };
 
     const explorerValeursColonnes = (newGrilleEstDecouvert, i, j, colonneDepart, grilleEtat) => {
@@ -166,6 +172,7 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut, dataJeu, set
             j++;
         }
     };
+
     return (<div className="flex w-full justify-center items-center my-4">
         <div className="border rounded-xl overflow-hidden grid aspect-square w-full max-w-[85vh] gap-0" style={{
             gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
@@ -188,6 +195,7 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut, dataJeu, set
                     activerDefaite={activerDefaite}
                     dataJeu={dataJeu}
                     setDataJeu={setDataJeu}
+                    verifierVictoire={VerifierVictoire}
                 />);
             }))}
         </div>
@@ -200,6 +208,7 @@ Grille.propTypes = {
     activerDefaite: PropTypes.func.isRequired,
     estDebut: PropTypes.bool.isRequired,
     setEstDebut: PropTypes.func.isRequired,
+    setEstVictoire: PropTypes.func.isRequired,
     dataJeu: PropTypes.arrayOf(PropTypes.number).isRequired,
     setDataJeu: PropTypes.func.isRequired,
 };
