@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types';
+import React from 'react';
+
 
 const Case = ({
                   estDecouvert,
@@ -8,7 +10,11 @@ const Case = ({
                   etatCase,
                   position,
                   activerDefaite,
-                  decouvrirCase
+                  decouvrirCase,
+                  dataJeu,
+                  setDataJeu,
+                  verifierVictoire,
+                  dataTestid
               }) => {
     const handleLeftClick = () => {
 
@@ -31,11 +37,14 @@ const Case = ({
 
             if (estDecouvert === 0) {
                 newGrille[position[0]][position[1]] = 2;
+                setDataJeu([dataJeu[0] - 1, dataJeu[1]]);
             } else if (estDecouvert === 2) {
                 newGrille[position[0]][position[1]] = 0;
+                setDataJeu([dataJeu[0] + 1, dataJeu[1]]);
             }
             return newGrille;
         });
+        verifierVictoire();
     };
 
     const getBackgroundColor = () => {
@@ -54,6 +63,7 @@ const Case = ({
 
         <button
             className={`flex items-center justify-center hover:bg-[#cfcfcf54] ${getBackgroundColor()}`}
+            data-testid={dataTestid}
             tabIndex={0}
             onClick={handleLeftClick}
             onContextMenu={(e) => handleRightClick(e)}
@@ -89,6 +99,9 @@ Case.propTypes = {
     position: PropTypes.arrayOf(PropTypes.number).isRequired,
     activerDefaite: PropTypes.func.isRequired,
     decouvrirCase: PropTypes.func.isRequired,
+    dataJeu: PropTypes.arrayOf(PropTypes.number).isRequired,
+    setDataJeu: PropTypes.func.isRequired,
+    verifierVictoire: PropTypes.func.isRequired,
 };
 
 export default Case;
