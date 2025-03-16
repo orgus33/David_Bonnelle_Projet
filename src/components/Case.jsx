@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types';
+import React from 'react';
+
 
 const Case = ({
                   estDecouvert,
@@ -12,6 +14,7 @@ const Case = ({
                   dataJeu,
                   setDataJeu,
                   verifierVictoire,
+                  dataTestid
               }) => {
     const handleLeftClick = () => {
 
@@ -60,6 +63,7 @@ const Case = ({
 
         <button
             className={`flex items-center justify-center hover:bg-[#cfcfcf54] ${getBackgroundColor()}`}
+            data-testid={dataTestid}
             tabIndex={0}
             onClick={handleLeftClick}
             onContextMenu={(e) => handleRightClick(e)}
