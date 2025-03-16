@@ -1,7 +1,6 @@
 import Case from "./Case.jsx";
 import PropTypes from "prop-types";
 import { useEffect, useState, useCallback } from "react";
-import React from 'react';
 
 function Grille({difficulte, activerDefaite, estDebut, setEstDebut, setEstVictoire, dataJeu, setDataJeu}) {
     const [hauteur, setHauteur] = useState(1);
