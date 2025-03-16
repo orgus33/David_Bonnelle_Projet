@@ -1,6 +1,7 @@
 import Case from "./Case.jsx";
 import PropTypes from "prop-types";
 import { useEffect, useState, useCallback } from "react";
+import React from 'react';
 
 function Grille({difficulte, activerDefaite, estDebut, setEstDebut, setEstVictoire, dataJeu, setDataJeu}) {
     const [hauteur, setHauteur] = useState(1);
@@ -178,7 +179,7 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut, setEstVictoi
     };
 
     return (<div className="flex w-full justify-center items-center my-4">
-        <div className="border rounded-xl overflow-hidden grid aspect-square w-full max-w-[85vh] gap-0" style={{
+        <div role="grid" className="border rounded-xl overflow-hidden grid aspect-square w-full max-w-[85vh] gap-0" style={{
             gridTemplateColumns: `repeat(${largeur}, minmax(0, 1fr))`,
             gridTemplateRows: `repeat(${hauteur}, minmax(0, 1fr))`,
             gap: 0
@@ -189,6 +190,7 @@ function Grille({difficulte, activerDefaite, estDebut, setEstDebut, setEstVictoi
                 const etatCase = grilleEtat[indice1]?.[indice2];
                 return (<Case
                     key={`${indice1}-${indice2}`}
+                    dataTestid={`case-${indice1}-${indice2}`}
                     position={[indice1, indice2]}
                     setGrilleEstDecouvert={setGrilleEstDecouvert}
                     creerGrille={creerGrille}
